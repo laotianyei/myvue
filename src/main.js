@@ -4,7 +4,17 @@ import router from './router'
 
 import './assets/css/global.css'
 
-Vue.config.productionTip = false
+import elementUI from 'element-ui'
+
+import './assets/fonts/iconfont.css'
+
+import axios from 'axios'
+// 接口基准地址
+
+Vue.use(elementUI)
+axios.defaults.baseURL = 'http://127.0.0.1:11333/api/private/v1/'
+Vue.prototype.$http = axios
+// Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

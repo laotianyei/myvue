@@ -37,7 +37,7 @@ export default {
             this.$refs.loginFormRef.validate(async (valid) => {
             if (valid) {
                 const {data:dt} = await this.$http.post('/login',this.loginForm)
-                console.log(dt)
+                // console.log(dt)
                 
                 if(dt.meta.status != 200){
                     return this.$message.error(dt.meta.msg);
@@ -57,8 +57,8 @@ export default {
     data(){
         return {
             loginForm :{ 
-                username:'',
-                password:''
+                username:'admin',
+                password:'123456'
             },
             rules: {
                 username: [

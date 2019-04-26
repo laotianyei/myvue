@@ -17,7 +17,7 @@ Vue.prototype.$http = axios
 // Vue.config.productionTip = false
 
 // 拦截器
-axios.interceptors.request.use(function(config){
+axios.interceptors.request.use(function (config) {
 
   // console.log(config)
   var token = window.sessionStorage.getItem('token')
@@ -26,8 +26,6 @@ axios.interceptors.request.use(function(config){
 }, function (error) {
   return Promise.reject(error);
 });
-
-
 
 /* eslint-disable no-new */
 new Vue({

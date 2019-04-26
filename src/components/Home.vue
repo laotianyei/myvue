@@ -16,30 +16,24 @@
           :unique-opened="true"
           :collapse="isOpen"
           :collapse-transition="false"
+          :router="true"
         >
-
-          <el-submenu 
-          :index="item.id+''" 
-          :style="{width:isOpen ? '65px':'200px'}" 
-          v-for="(item,index) in menuList" 
-          :key="item.id"
-           >
-
+          <el-submenu
+            :index="item.id+''"
+            :style="{width:isOpen ? '65px':'200px'}"
+            v-for="(item,index) in menuList"
+            :key="item.id"
+          >
             <template slot="title">
               <i :class=" 'iconfont icon-' + iconList[index]"></i>
               <span>{{item.authName}}</span>
             </template>
 
-            <el-menu-item 
-            v-for="item2 in item.children"
-            :key = "item2.id"
-            :index="item.id+ '-' +item2.id"
-            >
-               <i class="el-icon-menu"></i>
+            <el-menu-item v-for="item2 in item.children" :key="item2.id" :index="item2.path">
+              <i class="el-icon-menu"></i>
               <span>{{item2.authName}}</span>
             </el-menu-item>
           </el-submenu>
-          
         </el-menu>
       </el-aside>
       <el-main>
@@ -51,15 +45,16 @@
 
 <script>
 export default {
-  created(){
+  created() {
     this.leftListData()
   },
 
-  methods:{
-    async leftListData(){
-      const {data:dt} = await this.$http.get('menus')
-      // console.log(dt)
-      if(dt.meta.status != 200){
+  methods: {
+    async leftListData() {
+      const { data: dt } = await this.$http.get('menus')
+      // 存放路由
+      // console.log(dt.data[0].path)
+      if (dt.meta.status != 200) {
         this.$message.error(dt.meta.msg)
       }
       this.menuList = dt.data
@@ -70,29 +65,27 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       })
-      .then(() => {
-        window.sessionStorage.removeItem('token')
-        this.$router.push('/login')
-        this.$message({
-          type: 'info',
-          message: '退出成功'
+        .then(() => {
+          window.sessionStorage.removeItem('token')
+          this.$router.push('/login')
+          this.$message({
+            type: 'info',
+            message: '退出成功'
+          })
         })
-      })
-      .catch(action => {
-        this.$message({
-          type: 'info',
-          message: action === 'cancel'
-          ? '取消退出'
-          : '退出成功'
+        .catch(action => {
+          this.$message({
+            type: 'info',
+            message: action === 'cancel' ? '取消退出' : '退出成功'
+          })
         })
-      })
     }
   },
 
-  data(){
+  data() {
     return {
-      isOpen:false,
-      menuList:'',
+      isOpen: false,
+      menuList: '',
       iconList: ['users', 'tijikongjian', 'shangpin', 'danju', 'baobiao']
     }
   }
@@ -101,7 +94,7 @@ export default {
 
 <style lang="less" scoped>
 .el-container {
-  height:100%;
+  height: 100%;
   .el-header {
     background-color: #373d41;
     padding: 0;
@@ -129,15 +122,15 @@ export default {
     background-color: #eaedf1;
   }
 }
-.toggle_bar{
-    background-color: #4a5064;
-    color: #fff;
-    text-align: center;
-    user-select: none;
-    height: 25px;
-    line-height: 25px;
-    font-size: 16px;
-    letter-spacing: .1em;  /*间距*/
-    cursor: pointer;
+.toggle_bar {
+  background-color: #4a5064;
+  color: #fff;
+  text-align: center;
+  user-select: none;
+  height: 25px;
+  line-height: 25px;
+  font-size: 16px;
+  letter-spacing: 0.1em; /*间距*/
+  cursor: pointer;
 }
 </style>

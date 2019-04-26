@@ -1,11 +1,28 @@
-html,body,#app{
-    height: 100%;
-    margin: 0;
-    padding: 0;
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-width: 1024px;
 }
-.el-submenu__title,.el-menu-item{
-    font-size:13px;
-  }
-  i.iconfont{
-    margin-right:10px;
-  }
+
+.el-submenu__title,
+.el-menu-item {
+  font-size: 13px;
+}
+
+i.iconfont {
+  margin-right: 10px;
+}
+
+/* 卡片 */
+.box-card{
+  margin-top: 15px;
+  box-shadow: rgba(0,0,0,0.15)
+}
+/* 表格 分页 */
+.tabel-css, .el-pagination{
+  margin-top: 15px;
+  font-size: 12px;
+}

@@ -28,7 +28,7 @@
               <i :class=" 'iconfont icon-' + iconList[index]"></i>
               <span>{{item.authName}}</span>
             </template>
-
+            <!-- 把路由都存放到 -->
             <el-menu-item v-for="item2 in item.children" :key="item2.id" :index="item2.path">
               <i class="el-icon-menu"></i>
               <span>{{item2.authName}}</span>
@@ -57,6 +57,7 @@ export default {
       if (dt.meta.status != 200) {
         this.$message.error(dt.meta.msg)
       }
+      // console.log(dt.data)
       this.menuList = dt.data
     },
     logout() {

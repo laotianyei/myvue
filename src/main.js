@@ -8,8 +8,13 @@ import elementUI from 'element-ui'
 
 import './assets/fonts/iconfont.css'
 
+
+import crumb from './components/Crumb.vue'
+
 import axios from 'axios'
 // 接口基准地址
+// 注册面包屑为全局组件
+Vue.component('com-crumb',crumb)
 
 Vue.use(elementUI)
 axios.defaults.baseURL = 'http://127.0.0.1:11333/api/private/v1/'

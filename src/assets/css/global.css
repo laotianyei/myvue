@@ -22,7 +22,7 @@ i.iconfont {
   box-shadow: rgba(0,0,0,0.15)
 }
 /* 表格 分页 */
-.tabel-css, .el-pagination{
+.tabel-css, .el-pagination, .el-table{
   margin-top: 15px;
   font-size: 12px;
 }

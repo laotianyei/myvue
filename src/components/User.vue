@@ -1,7 +1,33 @@
 <template>
   <div>
     <!-- 面包屑 -->
-    <com-crumb nm="用户"></com-crumb>
+    <!-- <com-crumb nm="用户"></com-crumb> -->
+
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: 'home/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- 用户分配角色 -->
+    <el-dialog title="用户分配角色" :visible.sync="showRolesDiaLog">
+      <el-form :model="rolesDiaLog" :rules="userRules" ref="roleRef">
+        <el-form-item label="当前用户：">{{rolesDiaLog.username}}</el-form-item>
+        <el-form-item label="当前角色：">{{rolesDiaLog.role_name}}</el-form-item>
+        <el-select placeholder="请选择" v-model="rolesDiaLog.rrid">
+          <!-- 在这需要用roleList循环下拉菜单 -->
+          <el-option
+            v-for="item in roleList"
+            :key="item.id"
+            :value="item.id"
+            :label="item.roleName"
+          ></el-option>
+        </el-select>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showRolesDiaLog = false">取 消</el-button>
+        <el-button type="primary" @click="assignRoles()">确 定</el-button>
+      </div>
+    </el-dialog>
 
     <!-- 修改 -->
     <el-dialog title="修改用户" :visible.sync="updateUsers">
@@ -78,7 +104,7 @@
             v-model="info.row.mg_state"
             slot-scope="info"
             :width="60"
-            @change="aa(info.row.mg_state)"
+            @change="userState(info.row,info.row.mg_state)"
           ></el-switch>
         </el-table-column>
         <el-table-column label="操作" :width="180">
@@ -98,7 +124,12 @@
               placement="top"
               :enterable="false"
             >
-              <el-button type="warning" icon="el-icon-setting" circle></el-button>
+              <el-button
+                type="warning"
+                icon="el-icon-setting"
+                circle
+                @click="userAllotRoles(info.row)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -124,6 +155,32 @@ export default {
   },
 
   methods: {
+    async assignRoles() {
+      // roleRef
+      this.$refs.roleRef.validate(async valid => {
+        if (valid === true) {
+          const { data: dt } = await this.$http.put(
+            `/users/${this.rolesDiaLog.id}/role`,
+            { rid: this.rolesDiaLog.rrid }
+          )
+          // console.log(dt)
+          if (dt.meta.status != 200) {
+            return this.$message.error(dt.meta.msg)
+          }
+          this.$message.success(dt.meta.msg)
+          this.showRolesDiaLog = false
+          this.getUserList()
+        }
+      })
+    },
+    // 用户分配角色
+    async userAllotRoles(userRole) {
+      const { data: dt } = await this.$http.get('roles')
+      this.roleList = dt.data
+      this.rolesDiaLog = userRole
+      this.showRolesDiaLog = true
+      // console.log(dt)
+    },
     // 修改用户
     xiugai() {
       this.$refs.updateForm.validate(async valid => {
@@ -196,12 +253,14 @@ export default {
       })
     },
 
-    // 开关
-    aa(a) {
-      if (a) {
-        return this.$message.success('成功')
+    // 用户状态
+    async userState(id,open) {
+      const {data:dt} = await this.$http.put(`users/${id.id}/state/${open}`)
+      console.log(dt)
+      if(dt.meta.status != 200){
+        return this.$message.error(dt.meta.msg)
       }
-      this.$message.error('失败')
+      this.$message.success(dt.meta.msg)
     },
     handleSizeChange(val) {
       this.getUserList()
@@ -240,11 +299,14 @@ export default {
       // 不让会话框页面加载的时候就打开
       addUserDiaLog: false,
       updateUsers: false,
+      showRolesDiaLog: false,
+
       updateForm: {
         id: '',
         mobile: '',
         email: ''
       },
+
       queryData: {
         query: '', //
         pagenum: 1, // 当前页码
@@ -258,6 +320,16 @@ export default {
         mobile: ''
       },
       // 校验规则
+
+      // 用户分配角色
+      rolesDiaLog: {
+        username: '',
+        role_name: '',
+        rrid: 0
+      },
+      // 角色数据
+      roleList: [],
+
       rules: {
         username: { required: true, message: '请输入用户名', trigger: 'blur' },
         password: { required: true, message: '请输入密码', trigger: 'blur' },
@@ -269,6 +341,11 @@ export default {
       },
       updateRules: {
         email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }]
+      },
+      userRules: {
+        rid: [
+          { required: true, message: '请选取要分配的角色', trigger: 'blur' }
+        ]
       }
     }
   }

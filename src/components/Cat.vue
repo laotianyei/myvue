@@ -70,7 +70,7 @@
         :page-sizes="[3, 5, 10, 15]"
         :page-size="parameter.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="15"
+        :total="tot"
       ></el-pagination>
     </el-card>
   </div>
@@ -110,7 +110,8 @@ export default {
       })
 
       this.catListData = dt.data
-      console.log(dt)
+      
+      // console.log(this.catListData)
     }
   },
   data() {
@@ -130,12 +131,11 @@ export default {
       catListData: [],
       
       parameter:{
-        type: 1,
+        type: 3,
         pagenum: 1,
-        pagesize: 5,
-        total: null
+        pagesize: 5
       },
-
+      tot:0,
       validation: {
         cat_name: { required: true, message: '请输入用户名', trigger: 'blur' }
       }

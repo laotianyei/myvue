@@ -5,10 +5,10 @@
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-dialog title="角色分配" width="50%" :visible.sync="showCatDialog">
-      <el-form :rules="validation">
+    <el-dialog title="角色分配" width="50%" :visible.sync="showCatDialog" @close="resetForm()">
+      <el-form :rules="validation" ref="dialogRef">
         <el-form-item label="分類名称：" label-width="120px" prop="cat_name">
-          <el-input v-model="model"></el-input>
+          <el-input v-model="catListData.cat_name"></el-input>
         </el-form-item>
         <el-form-item label="分類上級：" label-width="120px">
           <!-- 级联选择器
@@ -22,13 +22,14 @@
             expand-trigger="hover"
             change-on-select
             clearable
+            @change="change()"
           ></el-cascader>
         </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="showCatDialog = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="feilei()">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 卡片 -->
@@ -81,7 +82,36 @@ export default {
   created() {
     this.cateData()
   },
+
   methods: {
+    // 点击添加分类按钮
+    change() {
+      const len = this.selectedOptions.length
+      // console.log(len)   1,2,3
+      if (len === 0) {
+        this.addFenlei.cat_pid = 0
+        this.addFenlei.cat_level = 0
+      } else {
+        this.addFenlei.cat_pid = this.selectedOptions[len-1]
+        this.addFenlei.cat_level = len
+      }
+    },
+    async feilei() {
+      const { data: dt } = await this.$http.post('/categories', this.addFenlei)
+      console.log(dt)
+    },
+    // 清除对话框默认的数据
+    resetForm() {
+      // 重置form表单
+      this.$refs.dialogRef.resetFields()
+      // 重置父分类 级联菜单
+      this.selectedOptions = []
+      this.catListData.cat_name = ''
+
+      // 重置表单对象设置过的分类pid和分类level
+      // this.addCat.cat_pid = 0
+      // this.addCat.cat_level = 0
+    },
     // 分页相关
     // 页面大小发生改变触发
     handleSizeChange(val) {
@@ -100,6 +130,8 @@ export default {
       this.showCatDialog = true
       const { data: dt } = await this.$http.get('/categories', { type: 2 })
       this.options = dt.data
+      // 因为清空了input的v-model值，需要点击按钮的时候在给一下不然会input框不让输入东西
+      this.catListData
     },
     // 获取分类数据
     // catRef
@@ -108,10 +140,8 @@ export default {
       const { data: dt } = await this.$http.get('/categories', {
         aa: this.parameter
       })
-
       this.catListData = dt.data
-      
-      // console.log(this.catListData)
+      // console.log(dt)
     }
   },
   data() {
@@ -129,15 +159,21 @@ export default {
 
       // 分类列表数据
       catListData: [],
-      
-      parameter:{
+
+      parameter: {
         type: 3,
         pagenum: 1,
         pagesize: 5
       },
-      tot:0,
+      tot: 0,
       validation: {
         cat_name: { required: true, message: '请输入用户名', trigger: 'blur' }
+      },
+      // 添加分类
+      addFenlei: {
+        cat_pid: 0,
+        cat_name: '',
+        cat_level: 0
       }
     }
   }

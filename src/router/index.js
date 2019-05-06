@@ -8,6 +8,7 @@ import user from '@/components/User'
 import rights from '@/components/Rights'
 import roles from '@/components/Roles'
 import cat from '@/components/Cat'
+import params from '@/components/Params'
 
 Vue.use(Router)
 
@@ -40,6 +41,10 @@ const router = new Router({
         {
           path:'/categories',
           component:cat
+        },
+        {
+          path:'/params',
+          component:params
         }
       ]
     }

@@ -8,7 +8,6 @@ import elementUI from 'element-ui'
 
 import './assets/fonts/iconfont.css'
 
-
 import crumb from './components/Crumb.vue'
 
 import axios from 'axios'

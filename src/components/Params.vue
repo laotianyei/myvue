@@ -8,9 +8,6 @@
     <el-card class="box-card">
       <el-alert title="
 注意：只允许为第三级分类设置相关参数！" type="warning" show-icon></el-alert>
-      <!-- 
-      
-      -->
       <el-row>
         <el-col>
           选择商品分类：

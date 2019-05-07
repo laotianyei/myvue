@@ -9,6 +9,8 @@ import rights from '@/components/Rights'
 import roles from '@/components/Roles'
 import cat from '@/components/Cat'
 import params from '@/components/Params'
+import goods from '@/components/Goods'
+import reports from '@/components/Reports'
 
 Vue.use(Router)
 
@@ -31,20 +33,28 @@ const router = new Router({
           component: user
         },
         {
-          path:'/rights',
-          component:rights
+          path: '/rights',
+          component: rights
         },
         {
-          path:'/roles',
-          component:roles
+          path: '/roles',
+          component: roles
         },
         {
-          path:'/categories',
-          component:cat
+          path: '/categories',
+          component: cat
         },
         {
-          path:'/params',
-          component:params
+          path: '/params',
+          component: params
+        },
+        {
+          path: '/goods',
+          component: goods
+        },
+        {
+          path: '/reports',
+          component: reports
         }
       ]
     }
